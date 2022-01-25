@@ -1,0 +1,150 @@
+/*=============== VARIABLES CSS ===============*/
+:root {
+    --header-color: #2e241d;
+    --background-color: #493a32;
+    --footer-color: #3f312a;
+
+    --body-color: #fff;
+    --border-color: #5c4a41;
+
+    --text-color: #3a4b40;
+    --title-color: #3a4b40;
+
+    --h1-font-size: 40px;
+    --h2-font-size: 24px;
+    --title-font-size: 13px;
+    --desc-font-size: 11px;
+}
+
+/*=============== BASE ===============*/
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-size: var(--normal-font-size);
+    background: var(--body-color);
+    color: var(--text-color);
+    font-family: "Poppins", sans-serif;
+}
+h1,
+h2,
+h3 {
+    font-weight: 400;
+}
+h1 {
+    font-size: var(--h1-font-size);
+}
+h2 {
+    color: var(--dark-text-color);
+    font-size: var(--h2-font-size);
+}
+h3 {
+    color: var(--title-color);
+    letter-spacing: -0.3px;
+}
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+button,
+input,
+textarea {
+    border: none;
+    outline: none;
+}
+p {
+    margin: 0;
+}
+
+/*=============== LAYOUT ===============*/
+.not-started {
+    color: #232323;
+    background-color: #cecece;
+}
+.pending {
+    color: #c37500;
+    background-color: #ffddaa;
+}
+.in-progress {
+    color: #045821;
+    background-color: #cdead6;
+}
+.delay {
+    color: #b10000;
+    background-color: #f1c1c1;
+}
+.done {
+    color: #09339f;
+    background-color: #cfd8ef;
+}
+
+.priority {
+    text-transform: uppercase;
+}
+.task-desc {
+    font-size: 12px;
+    color: rgb(155, 155, 155);
+    white-space: nowrap;
+    width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.task .dropdown-toggle::after {
+    display: none;
+}
+.action .btn {
+    margin-left: auto;
+}
+.container {
+    margin-top: 30px;
+}
+.action {
+    margin-top: 30px;
+}
+.title {
+    margin-top: 30px;
+}
+.task__item {
+    height: 60px;
+    border-bottom: 1px solid lightgray;
+    align-items: center;
+}
+/* .task .btn {
+    color: red;
+    background: #123123;
+} */
+.col--small {
+    width: 4%;
+}
+.col--medium {
+    width: 10%;
+}
+.col--extra--medium {
+    width: 15%;
+}
+.calendar {
+    position: relative;
+    cursor: pointer;
+}
+.calendar__icon {
+    position: absolute;
+    right: 5;
+    top: 5;
+}
+.col--action {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
