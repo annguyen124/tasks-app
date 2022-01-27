@@ -148,3 +148,17 @@ p {
     justify-content: center;
     gap: 12px;
 }
+
+.invalid--show {
+    display: block;
+}
+.invalid--hide {
+    display: none;
+}
+.form .btn {
+    width: 100%;
+}
+.form__actions {
+    border-top: 1px solid lightgray;
+    padding-top: 18px;
+}

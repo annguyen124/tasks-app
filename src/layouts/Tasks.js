@@ -3,12 +3,16 @@ import { Container, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Checkbox from "components/Checkbox";
 import DropdownButton from "components/DropdownButton";
 export default function Task(props) {
-  const { tasks, handleShow } = props;
-  const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      Edit/Delete
-    </Tooltip>
-  );
+  const { tasks, handleShow, handleShowConfirm } = props;
+
+  const renderTooltip = (title) => (props) => {
+    return (
+      <Tooltip id="button-tooltip" {...props}>
+        {title}
+      </Tooltip>
+    );
+  };
+
   return tasks.map((task) => (
     <Container fluid key={task.id} className="task">
       <Row className="task__item">
@@ -20,27 +24,29 @@ export default function Task(props) {
           <p className="task-desc">{task.description}</p>
         </Col>
         <Col md={1} className="col--extra--medium">
-          {/* <div className="not-started">{task.status}</div> */}
           <DropdownButton status={task.status} />
         </Col>
         <Col>{task.deadline} </Col>
         <Col md={1} className="col--extra--medium">
           <div className="priority">{task.priority}</div>
         </Col>
-        <Col md={1} className="col--medium col--action" >
+        <Col md={1} className="col--medium col--action">
           <OverlayTrigger
             placement="bottom"
             delay={{ show: 100, hide: 0 }}
-            overlay={renderTooltip}
+            overlay={renderTooltip("Edit")}
           >
             <i className="bi bi-pencil" onClick={() => handleShow(task)}></i>
           </OverlayTrigger>
           <OverlayTrigger
             placement="bottom"
             delay={{ show: 100, hide: 0 }}
-            overlay={renderTooltip}
+            overlay={renderTooltip("Delete")}
           >
-            <i className="bi bi-trash"></i>
+            <i
+              className="bi bi-trash"
+              onClick={() => handleShowConfirm(task)}
+            ></i>
           </OverlayTrigger>
         </Col>
       </Row>

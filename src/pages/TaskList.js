@@ -10,6 +10,7 @@ import "assets/styles/style.css";
 import FormDialog from "components/FormDialog";
 import { TASKS } from "constants";
 import _ from "lodash";
+import ConfirmDialog from "components/ConfirmDialog";
 const INITIAL_TASK = {
   title: "",
   description: "",
@@ -17,43 +18,67 @@ const INITIAL_TASK = {
   status: "Not Started",
   priority: "Medium",
 };
+
 export default function TaskList(params) {
-  
   const [tasks, setTasks] = useState(TASKS);
   const [view, setView] = useState("Show incomplete tasks");
   const [status, setStatus] = useState("Not Started");
   const [show, setShow] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [task, setTask] = useState(INITIAL_TASK);
-  const [action, setAction] = useState("Edit");
+  const [dialog, setDialog] = useState({});
 
-  const handleAddTask = () => {
-    
-  };
-
-  const handleEditTask = () => {
-  };
-
-  const [handleAction, setHandleAction] = useState(handleEditTask);
-
-  const handleClose = () => setShow(false);
+  useEffect(() => {}, []);
 
   const handleShow = (curTask = {}) => {
     const isAdd = _.isEmpty(curTask);
-    setAction(isAdd ? "Add" : "Edit");
-    setHandleAction(isAdd ? handleAddTask : handleEditTask);
     setTask(isAdd ? INITIAL_TASK : curTask);
+    setDialog({
+      title: isAdd ? "Add Task" : "Edit Task",
+      action: isAdd ? "Add" : "Edit",
+    });
     setShow(true);
   };
+  const handleClose = () => setShow(false);
 
   const handleChangeView = (newView) => {
     setView(newView);
   };
+
   const handleChangeStatus = (newStatus) => {
     setStatus(newStatus);
   };
-  const handleChangePriority = (newPriority) => {};
-  
-  useEffect(() => {}, [view, status, tasks]);
+
+  const handleChangeForm = (e) => {
+    setTask({ ...task, [e.target.name]: e.target.value });
+  };
+  const handleDateTime = (m) => {
+    setTask({ ...task, deadline: m.format("hh:mm A, MMM DD, YYYY") });
+  };
+  const handleSubmitForm = (e) => {
+    e.preventDefault();
+    if (_.get(task, "id")) {
+      setTasks(
+        tasks.map((curTask) => (curTask.id === task.id ? task : curTask))
+      );
+    } else {
+      const newTask = { id: tasks.length + 1, ...task };
+      setTasks([newTask, ...tasks]);
+    }
+    setShow(false);
+  };
+
+  const handleShowConfirm = (curTask = {}) => {
+    setShowConfirm(true);
+    setTask(curTask);
+  };
+  const handleCloseConfirm = () => setShowConfirm(false);
+
+  const handleDeleteTask = () => {
+    setShowConfirm(false);
+    setTasks(tasks.filter((curTask) => curTask.id !== task.id));
+  };
+
   return (
     <Container className="container">
       <h1>Tasks</h1>
@@ -65,16 +90,26 @@ export default function TaskList(params) {
         handleShow={handleShow}
       />
       <Titles />
-      <Tasks tasks={tasks} handleShow={handleShow} />
+      <Tasks
+        tasks={tasks}
+        handleShow={handleShow}
+        handleShowConfirm={handleShowConfirm}
+      />
       <FormDialog
         show={show}
         handleClose={handleClose}
-        action={action}
-        handleAction={handleAction}
+        dialog={dialog}
         task={task}
-        handleChangeStatus={handleChangeStatus}
-        handleChangePriority={handleChangePriority}
+        handleSubmitForm={handleSubmitForm}
+        handleChangeForm={handleChangeForm}
+        handleDateTime={handleDateTime}
       />
+      <ConfirmDialog
+        show={showConfirm}
+        handleClose={handleCloseConfirm}
+        handleDeleteTask={handleDeleteTask}
+        task={task}
+      ></ConfirmDialog>
     </Container>
   );
 }

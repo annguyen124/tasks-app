@@ -1,46 +1,56 @@
 import React, { useState } from "react";
 import { Button, Modal, Form, Col, Row } from "react-bootstrap";
 import Datetime from "react-datetime";
-import Dropdown from "./Dropdown";
 import { STATUSES, PRIORITIES } from "constants";
+import _ from "lodash";
+import moment from "moment";
+
 export default function FormDialog(props) {
   const {
-    title,
-    action,
-    handleAction,
+    dialog,
     show,
     handleClose,
     task,
-    handleChangeStatus,
+    handleChangeForm,
+    handleSubmitForm,
+    handleDateTime,
   } = props;
+
+  const yesterday = moment().subtract(1, "day");
+  function validDate(current) {
+    return current.isAfter(yesterday);
+  }
 
   return (
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
+          <Modal.Title>{dialog.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form onSubmit={handleSubmitForm} className="form">
             <Row>
-              <Col md={9}>
+              <Col md={8}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Title</Form.Label>
                   <Form.Control
-                    type="email"
+                    required
+                    name="title"
+                    type="title"
                     placeholder="Enter title"
                     defaultValue={task.title}
+                    onChange={handleChangeForm}
                   />
                 </Form.Group>
               </Col>
-              <Col md={3}>
-                <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Col md={4}>
+                <Form.Group className="mb-3">
                   <Form.Label>Priority</Form.Label>
-                  <Dropdown
-                    name={task.priority}
-                    options={PRIORITIES}
-                    handleChange={handleChangeStatus}
-                  />
+                  <Form.Select name="priority" onChange={handleChangeForm}>
+                    {PRIORITIES.map((priority, index) => (
+                      <option key={index}>{priority}</option>
+                    ))}
+                  </Form.Select>
                 </Form.Group>
               </Col>
             </Row>
@@ -50,9 +60,11 @@ export default function FormDialog(props) {
                 <Form.Label>Description</Form.Label>
                 <Form.Control
                   as="textarea"
+                  name="description"
                   rows={3}
                   placeholder="Tell me more about the task"
                   defaultValue={task.description}
+                  onChange={handleChangeForm}
                 />
               </Form.Group>
             </Row>
@@ -64,32 +76,44 @@ export default function FormDialog(props) {
                     <i className="bi bi-calendar calendar__icon"></i>
                     <Datetime
                       inputProps={{ placeholder: "Select date & time" }}
+                      isValidDate={validDate}
+                      dateFormat="MMM DD, YYYY"
+                      initialValue={new Date(task.deadline)}
+                      onChange={handleDateTime}
                     />
                   </div>
                 </Form.Group>
               </Col>
 
               <Col md={4}>
-                <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Group className="mb-3">
                   <Form.Label>Status</Form.Label>
-                  <Dropdown
-                    name={task.status}
-                    options={STATUSES}
-                    handleChange={handleChangeStatus}
-                  />
+                  <Form.Select name="status" onChange={handleChangeForm}>
+                    {STATUSES.map((status, index) => (
+                      <option key={index}>{status}</option>
+                    ))}
+                  </Form.Select>
                 </Form.Group>
+              </Col>
+            </Row>
+            <Row className="form__actions">
+              <Col md={{ offset: 6 }}>
+                <Button variant="outline-secondary" onClick={handleClose}>
+                  Close
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  onClick={handleSubmitForm}
+                >
+                  {dialog.action}
+                </Button>
               </Col>
             </Row>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleAction}>
-            {action}
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   );
