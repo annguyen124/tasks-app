@@ -69,29 +69,45 @@ p {
 }
 
 /*=============== LAYOUT ===============*/
-.not-started {
+.not-started .dropdown-basic-button {
     color: #232323;
     background-color: #cecece;
 }
-.pending {
+.pending .btn {
     color: #c37500;
     background-color: #ffddaa;
+    border: #ffddaa;
 }
 .in-progress {
     color: #045821;
     background-color: #cdead6;
 }
-.delay {
+.delay .btn {
     color: #b10000;
     background-color: #f1c1c1;
+    border: #f1c1c1;
 }
-.done {
+.done .btn {
     color: #09339f;
     background-color: #cfd8ef;
+    border: #cfd8ef;
 }
 
 .priority {
     text-transform: uppercase;
+    font-weight: 600;
+}
+.critical {
+    color: #ff4040;
+}
+.high {
+    color: #ff6d1b;
+}
+.medium {
+    color: #ffd600;
+}
+.low {
+    color: #089237;
 }
 .task-desc {
     font-size: 12px;
@@ -113,6 +129,9 @@ p {
 .action {
     margin-top: 30px;
 }
+.bi {
+    cursor: pointer;
+}
 .title {
     margin-top: 30px;
 }
@@ -120,6 +139,7 @@ p {
     height: 60px;
     border-bottom: 1px solid lightgray;
     align-items: center;
+    cursor: default;
 }
 /* .task .btn {
     color: red;
@@ -161,4 +181,7 @@ p {
 .form__actions {
     border-top: 1px solid lightgray;
     padding-top: 18px;
+}
+.status {
+    text-transform: capitalize;
 }

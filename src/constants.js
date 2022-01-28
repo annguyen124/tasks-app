@@ -20,7 +20,7 @@ export const TASKS = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     status: "Not Started",
     deadline: "12:00 AM, March 3, 2021",
-    priority: "Critical",
+    priority: "critical",
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ export const TASKS = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     status: "Pending",
     deadline: "12:00 AM, March 3, 2021",
-    priority: "High",
+    priority: "high",
   },
   {
     id: 3,
@@ -38,7 +38,7 @@ export const TASKS = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     status: "In Progress",
     deadline: "12:00 AM, March 3, 2021",
-    priority: "Medium",
+    priority: "medium",
   },
   {
     id: 4,
@@ -47,7 +47,7 @@ export const TASKS = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     status: "Delay",
     deadline: "12:00 AM, March 3, 2021",
-    priority: "Low",
+    priority: "low",
   },
   {
     id: 5,
@@ -56,6 +56,6 @@ export const TASKS = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     status: "Done",
     deadline: "12:00 AM, March 3, 2021",
-    priority: "Critical",
+    priority: "critical",
   },
 ];

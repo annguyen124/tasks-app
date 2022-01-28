@@ -11,6 +11,7 @@ import FormDialog from "components/FormDialog";
 import { TASKS } from "constants";
 import _ from "lodash";
 import ConfirmDialog from "components/ConfirmDialog";
+
 const INITIAL_TASK = {
   title: "",
   description: "",
@@ -79,6 +80,11 @@ export default function TaskList(params) {
     setTasks(tasks.filter((curTask) => curTask.id !== task.id));
   };
 
+  const handleCheckDoneTask = (checked, task) => {
+    task.status = checked;
+    setTasks(tasks.map((curTask) => (curTask.id === task.id ? task : curTask)));
+  };
+
   return (
     <Container className="container">
       <h1>Tasks</h1>
@@ -94,6 +100,7 @@ export default function TaskList(params) {
         tasks={tasks}
         handleShow={handleShow}
         handleShowConfirm={handleShowConfirm}
+        handleCheckDoneTask={handleCheckDoneTask}
       />
       <FormDialog
         show={show}
