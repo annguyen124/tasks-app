@@ -69,18 +69,101 @@ p {
 }
 
 /*=============== LAYOUT ===============*/
-.not-started .dropdown-basic-button {
+.container {
+    margin-top: 30px;
+}
+.title {
+    margin-top: 30px;
+}
+.action {
+    margin-top: 30px;
+}
+.action .btn {
+    margin-left: auto;
+}
+.form-check-input {
+    margin-top: 0;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+.form-check-input[type="checkbox"] {
+    border-radius: 50%;
+}
+
+.task-desc {
+    font-size: 12px;
+    color: rgb(155, 155, 155);
+    white-space: nowrap;
+    width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.task .dropdown-toggle::after {
+    display: none;
+}
+.bi {
+    cursor: pointer;
+}
+.task__item {
+    height: 60px;
+    border-bottom: 1px solid lightgray;
+    align-items: center;
+    cursor: default;
+}
+
+.col--small {
+    width: 4%;
+}
+.col--medium {
+    width: 10%;
+}
+.col--extra--medium {
+    width: 15%;
+}
+.col--action {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+.form .btn {
+    width: 100%;
+}
+.form__actions {
+    border-top: 1px solid lightgray;
+    padding-top: 18px;
+}
+.status,
+.dropdown-item,
+.btn,
+.form-select {
+    text-transform: capitalize;
+}
+.calendar {
+    position: relative;
+    cursor: pointer;
+}
+.calendar__icon {
+    position: absolute;
+    right: 5;
+    top: 5;
+}
+
+/*=============== STATUS STYLE ===============*/
+.not-started .btn {
     color: #232323;
     background-color: #cecece;
+    border: #cecece;
 }
 .pending .btn {
     color: #c37500;
     background-color: #ffddaa;
     border: #ffddaa;
 }
-.in-progress {
+.in-progress .btn {
     color: #045821;
     background-color: #cdead6;
+    border: #cdead6;
 }
 .delay .btn {
     color: #b10000;
@@ -93,6 +176,7 @@ p {
     border: #cfd8ef;
 }
 
+/*=============== PRIORITY STYLE ===============*/
 .priority {
     text-transform: uppercase;
     font-weight: 600;
@@ -108,80 +192,4 @@ p {
 }
 .low {
     color: #089237;
-}
-.task-desc {
-    font-size: 12px;
-    color: rgb(155, 155, 155);
-    white-space: nowrap;
-    width: 260px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.task .dropdown-toggle::after {
-    display: none;
-}
-.action .btn {
-    margin-left: auto;
-}
-.container {
-    margin-top: 30px;
-}
-.action {
-    margin-top: 30px;
-}
-.bi {
-    cursor: pointer;
-}
-.title {
-    margin-top: 30px;
-}
-.task__item {
-    height: 60px;
-    border-bottom: 1px solid lightgray;
-    align-items: center;
-    cursor: default;
-}
-/* .task .btn {
-    color: red;
-    background: #123123;
-} */
-.col--small {
-    width: 4%;
-}
-.col--medium {
-    width: 10%;
-}
-.col--extra--medium {
-    width: 15%;
-}
-.calendar {
-    position: relative;
-    cursor: pointer;
-}
-.calendar__icon {
-    position: absolute;
-    right: 5;
-    top: 5;
-}
-.col--action {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-}
-
-.invalid--show {
-    display: block;
-}
-.invalid--hide {
-    display: none;
-}
-.form .btn {
-    width: 100%;
-}
-.form__actions {
-    border-top: 1px solid lightgray;
-    padding-top: 18px;
-}
-.status {
-    text-transform: capitalize;
 }

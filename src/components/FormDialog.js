@@ -36,7 +36,6 @@ export default function FormDialog(props) {
                   <Form.Control
                     required
                     name="title"
-                    type="title"
                     placeholder="Enter title"
                     defaultValue={task.title}
                     onChange={handleChangeForm}
@@ -46,7 +45,11 @@ export default function FormDialog(props) {
               <Col md={4}>
                 <Form.Group className="mb-3">
                   <Form.Label>Priority</Form.Label>
-                  <Form.Select name="priority" onChange={handleChangeForm}>
+                  <Form.Select
+                    name="priority"
+                    onChange={handleChangeForm}
+                    defaultValue={task.priority}
+                  >
                     {PRIORITIES.map((priority, index) => (
                       <option key={index}>{priority}</option>
                     ))}
@@ -88,7 +91,11 @@ export default function FormDialog(props) {
               <Col md={4}>
                 <Form.Group className="mb-3">
                   <Form.Label>Status</Form.Label>
-                  <Form.Select name="status" onChange={handleChangeForm}>
+                  <Form.Select
+                    name="status"
+                    onChange={handleChangeForm}
+                    defaultValue={task.status}
+                  >
                     {STATUSES.map((status, index) => (
                       <option key={index}>{status}</option>
                     ))}
@@ -103,11 +110,7 @@ export default function FormDialog(props) {
                 </Button>
               </Col>
               <Col>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  onClick={handleSubmitForm}
-                >
+                <Button type="submit" variant="primary">
                   {dialog.action}
                 </Button>
               </Col>

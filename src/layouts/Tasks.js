@@ -3,7 +3,7 @@ import { Container, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Checkbox from "components/Checkbox";
 import DropdownButton from "components/DropdownButton";
 export default function Task(props) {
-  const { tasks, handleShow, handleShowConfirm, handleCheckDoneTask } = props;
+  const { tasks, handleShow, handleShowConfirm, handleChangeStatus } = props;
 
   const renderTooltip = (title) => (props) => {
     return (
@@ -17,18 +17,14 @@ export default function Task(props) {
     <Container fluid key={task.id} className="task">
       <Row className="task__item">
         <Col md={1} className="col--small">
-          <Checkbox task={task} handleCheckDoneTask={handleCheckDoneTask} />
+          <Checkbox task={task} handleChangeStatus={handleChangeStatus} />
         </Col>
         <Col>
           <p>{task.title}</p>
           <p className="task-desc">{task.description}</p>
         </Col>
         <Col md={1} className="col--extra--medium">
-          <DropdownButton
-            status={task.status}
-            task={task}
-            handleChangeStatus={handleCheckDoneTask}
-          />
+          <DropdownButton task={task} handleChangeStatus={handleChangeStatus} />
         </Col>
         <Col>{task.deadline} </Col>
         <Col md={1} className="col--extra--medium">

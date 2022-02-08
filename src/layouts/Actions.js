@@ -1,27 +1,23 @@
 import React from "react";
 import Dropdown from "components/Dropdown";
 import Button from "components/Button";
+import Checkbox from "components/Checkbox";
 import { Stack } from "react-bootstrap";
-
+import { STATUSES } from "constants";
 export default function Actions({
-  handleChangeView,
-  handleChangeStatus,
-  view,
+  filterIncompletedTasks,
+  fitlerByStatus,
   status,
   handleShow,
 }) {
- 
   return (
     <Stack direction="horizontal" gap={2} className="action">
-      <Dropdown
-        name={view}
-        options={["Show incompleted tasks", "Show completed tasks", "Show all"]}
-        handleChange={handleChangeView}
-      />
+      <Checkbox handleChangeStatus={filterIncompletedTasks} filter={true} />{" "}
+      Show incompleted tasks only
       <Dropdown
         name={status}
-        options={["Not Started", "Pending", "In Progress", "Delay", "Done"]}
-        handleChange={handleChangeStatus}
+        options={["status", ...STATUSES]}
+        handleChange={fitlerByStatus}
       />
       <Button
         handleClick={handleShow}

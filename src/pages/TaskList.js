@@ -8,28 +8,61 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "assets/styles/style.css";
 import FormDialog from "components/FormDialog";
-import { TASKS } from "constants";
 import _ from "lodash";
 import ConfirmDialog from "components/ConfirmDialog";
+
+import { db } from "../firebase";
+import {
+  collection,
+  addDoc,
+  Timestamp,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
 const INITIAL_TASK = {
   title: "",
   description: "",
   deadline: "",
-  status: "Not Started",
-  priority: "Medium",
+  status: "not started",
+  priority: "medium",
 };
 
 export default function TaskList(params) {
-  const [tasks, setTasks] = useState(TASKS);
-  const [view, setView] = useState("Show incomplete tasks");
-  const [status, setStatus] = useState("Not Started");
+  const [tasks, setTasks] = useState([]);
+  const [showIncompletedTasks, setShowIncompletedTasks] = useState(false);
+  const [status, setStatus] = useState("status");
   const [show, setShow] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [task, setTask] = useState(INITIAL_TASK);
   const [dialog, setDialog] = useState({});
+  // const [sort, setSort] = useState({ name: "", type: "" });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const q = query(collection(db, "tasks"), orderBy("created", "desc"));
+    const ingore = onSnapshot(q, (querySnapshot) => {
+      const list = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+   
+      setTasks(
+        showIncompletedTasks
+          ? list.filter((task) => task.status !== "done")
+          : status !== "status"
+          ? list.filter((task) => task.status === status)
+          : list
+      );
+    });
+
+    return () => ingore();
+  }, [status, showIncompletedTasks]);
 
   const handleShow = (curTask = {}) => {
     const isAdd = _.isEmpty(curTask);
@@ -42,11 +75,11 @@ export default function TaskList(params) {
   };
   const handleClose = () => setShow(false);
 
-  const handleChangeView = (newView) => {
-    setView(newView);
+  const filterIncompletedTasks = (toggleShow) => {
+    setShowIncompletedTasks(toggleShow);
   };
 
-  const handleChangeStatus = (newStatus) => {
+  const fitlerByStatus = (newStatus) => {
     setStatus(newStatus);
   };
 
@@ -56,16 +89,29 @@ export default function TaskList(params) {
   const handleDateTime = (m) => {
     setTask({ ...task, deadline: m.format("hh:mm A, MMM DD, YYYY") });
   };
-  const handleSubmitForm = (e) => {
+
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
-    if (_.get(task, "id")) {
-      setTasks(
-        tasks.map((curTask) => (curTask.id === task.id ? task : curTask))
-      );
+    const id = _.get(task, "id");
+
+    if (id) {
+      const taskDocRef = doc(db, "tasks", id);
+      try {
+        await updateDoc(taskDocRef, { ...task });
+      } catch (err) {
+        alert("EDIT", err);
+      }
     } else {
-      const newTask = { id: tasks.length + 1, ...task };
-      setTasks([newTask, ...tasks]);
+      try {
+        await addDoc(collection(db, "tasks"), {
+          ...task,
+          created: Timestamp.now(),
+        });
+      } catch (err) {
+        alert(err);
+      }
     }
+
     setShow(false);
   };
 
@@ -75,33 +121,45 @@ export default function TaskList(params) {
   };
   const handleCloseConfirm = () => setShowConfirm(false);
 
-  const handleDeleteTask = () => {
+  const handleDeleteTask = async () => {
     setShowConfirm(false);
-    setTasks(tasks.filter((curTask) => curTask.id !== task.id));
+    const taskDocRef = doc(db, "tasks", task.id);
+    try {
+      await deleteDoc(taskDocRef);
+    } catch (err) {
+      alert(err);
+    }
   };
 
-  const handleCheckDoneTask = (checked, task) => {
-    task.status = checked;
-    setTasks(tasks.map((curTask) => (curTask.id === task.id ? task : curTask)));
+  const handleChangeStatus = async (checked, task) => {
+    const taskDocRef = doc(db, "tasks", task.id);
+    try {
+      await updateDoc(taskDocRef, { ...task, status: checked });
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
     <Container className="container">
       <h1>Tasks</h1>
       <Actions
-        handleChangeView={handleChangeView}
-        handleChangeStatus={handleChangeStatus}
-        view={view}
+        filterIncompletedTasks={filterIncompletedTasks}
+        fitlerByStatus={fitlerByStatus}
         status={status}
         handleShow={handleShow}
       />
       <Titles />
-      <Tasks
-        tasks={tasks}
-        handleShow={handleShow}
-        handleShowConfirm={handleShowConfirm}
-        handleCheckDoneTask={handleCheckDoneTask}
-      />
+      {_.isEmpty(tasks) ? (
+        <div> There is no tasks to display.</div>
+      ) : (
+        <Tasks
+          tasks={tasks}
+          handleShow={handleShow}
+          handleShowConfirm={handleShowConfirm}
+          handleChangeStatus={handleChangeStatus}
+        />
+      )}
       <FormDialog
         show={show}
         handleClose={handleClose}

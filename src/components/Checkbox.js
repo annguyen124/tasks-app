@@ -2,19 +2,22 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import _ from "lodash";
 
-export default function Checkbox({ task, handleCheckDoneTask }) {
-  const checked = _.get(task, "status") === "Done" ? true : false;
+export default function Checkbox({ task, handleChangeStatus, filter }) {
+  const checked = _.get(task, "status") === "done" ? true : false;
   const handleChange = (e) => {
-    console.log(e.target.checked);
-    handleCheckDoneTask(e.target.value, task);
+    handleChangeStatus(e.target.value, task);
+  };
+  const handleFilter = (e) => {
+    handleChangeStatus(e.target.checked);
   };
 
-  return (
+  return filter ? (
+    <Form.Check defaultChecked={false} onChange={handleFilter} />
+  ) : (
     <Form.Check
-      aria-label="radio 1"
       checked={checked}
       disabled={checked}
-      value={"Done"}
+      value={"done"}
       onChange={handleChange}
     />
   );
