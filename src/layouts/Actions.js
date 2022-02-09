@@ -9,15 +9,20 @@ export default function Actions({
   fitlerByStatus,
   status,
   handleShow,
+  showIncompletedTasks,
 }) {
   return (
     <Stack direction="horizontal" gap={2} className="action">
-      <Checkbox handleChangeStatus={filterIncompletedTasks} filter={true} />{" "}
+      <Checkbox
+        handleChangeStatus={filterIncompletedTasks}
+        filter={showIncompletedTasks}
+      />
       Show incompleted tasks only
       <Dropdown
         name={status}
         options={["status", ...STATUSES]}
         handleChange={fitlerByStatus}
+        showIncompletedTasks={showIncompletedTasks}
       />
       <Button
         handleClick={handleShow}

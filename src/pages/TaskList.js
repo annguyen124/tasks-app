@@ -10,20 +10,14 @@ import "assets/styles/style.css";
 import FormDialog from "components/FormDialog";
 import _ from "lodash";
 import ConfirmDialog from "components/ConfirmDialog";
-
-import { db } from "../firebase";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  collection,
-  addDoc,
-  Timestamp,
-  query,
-  where,
-  orderBy,
-  onSnapshot,
-  doc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
+  getTasks,
+  addTask,
+  editTask,
+  deleteTask,
+  dndTask,
+} from "services/actions";
 
 const INITIAL_TASK = {
   title: "",
@@ -34,35 +28,19 @@ const INITIAL_TASK = {
 };
 
 export default function TaskList(params) {
-  const [tasks, setTasks] = useState([]);
+  const dispatch = useDispatch();
+  const tasks = useSelector((state) => state.tasks.data);
   const [showIncompletedTasks, setShowIncompletedTasks] = useState(false);
   const [status, setStatus] = useState("status");
   const [show, setShow] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [task, setTask] = useState(INITIAL_TASK);
   const [dialog, setDialog] = useState({});
-  // const [sort, setSort] = useState({ name: "", type: "" });
-
+  const [sort, setSort] = useState({ name: "index", type: false });
   useEffect(() => {
-    const q = query(collection(db, "tasks"), orderBy("created", "desc"));
-    const ingore = onSnapshot(q, (querySnapshot) => {
-      const list = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-   
-      setTasks(
-        showIncompletedTasks
-          ? list.filter((task) => task.status !== "done")
-          : status !== "status"
-          ? list.filter((task) => task.status === status)
-          : list
-      );
-    });
-
-    return () => ingore();
-  }, [status, showIncompletedTasks]);
+    const unsub = dispatch(getTasks(status, showIncompletedTasks, sort));
+    return () => unsub();
+  }, [status, showIncompletedTasks, sort]);
 
   const handleShow = (curTask = {}) => {
     const isAdd = _.isEmpty(curTask);
@@ -80,6 +58,7 @@ export default function TaskList(params) {
   };
 
   const fitlerByStatus = (newStatus) => {
+    if (newStatus === "done") setShowIncompletedTasks(false);
     setStatus(newStatus);
   };
 
@@ -93,23 +72,13 @@ export default function TaskList(params) {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     const id = _.get(task, "id");
-
     if (id) {
-      const taskDocRef = doc(db, "tasks", id);
-      try {
-        await updateDoc(taskDocRef, { ...task });
-      } catch (err) {
-        alert("EDIT", err);
-      }
+      dispatch(editTask(id, task));
     } else {
-      try {
-        await addDoc(collection(db, "tasks"), {
-          ...task,
-          created: Timestamp.now(),
-        });
-      } catch (err) {
-        alert(err);
-      }
+      const index = _.isEmpty(tasks)
+        ? 1
+        : Math.max(...tasks.map((task) => task.index)) + 1;
+      dispatch(addTask({ index, ...task }));
     }
 
     setShow(false);
@@ -122,34 +91,34 @@ export default function TaskList(params) {
   const handleCloseConfirm = () => setShowConfirm(false);
 
   const handleDeleteTask = async () => {
+    dispatch(deleteTask(task.id));
     setShowConfirm(false);
-    const taskDocRef = doc(db, "tasks", task.id);
-    try {
-      await deleteDoc(taskDocRef);
-    } catch (err) {
-      alert(err);
-    }
   };
 
   const handleChangeStatus = async (checked, task) => {
-    const taskDocRef = doc(db, "tasks", task.id);
-    try {
-      await updateDoc(taskDocRef, { ...task, status: checked });
-    } catch (err) {
-      alert(err);
-    }
+    dispatch(editTask(task.id, { status: checked }));
+  };
+
+  const handleDnD = (orderedTasks) => {
+    dispatch(dndTask(orderedTasks));
+  };
+
+  const handleSort = (name) => {
+    if (name !== sort.name) setSort({ name, type: true });
+    else setSort({ name, type: !sort.type });
   };
 
   return (
     <Container className="container">
-      <h1>Tasks</h1>
+      <h1>Todos</h1>
       <Actions
         filterIncompletedTasks={filterIncompletedTasks}
         fitlerByStatus={fitlerByStatus}
         status={status}
         handleShow={handleShow}
+        showIncompletedTasks={showIncompletedTasks}
       />
-      <Titles />
+      <Titles handleSort={handleSort} />
       {_.isEmpty(tasks) ? (
         <div> There is no tasks to display.</div>
       ) : (
@@ -158,6 +127,7 @@ export default function TaskList(params) {
           handleShow={handleShow}
           handleShowConfirm={handleShowConfirm}
           handleChangeStatus={handleChangeStatus}
+          handleDnD={handleDnD}
         />
       )}
       <FormDialog

@@ -11,14 +11,12 @@ export default function Checkbox({ task, handleChangeStatus, filter }) {
     handleChangeStatus(e.target.checked);
   };
 
-  return filter ? (
-    <Form.Check defaultChecked={false} onChange={handleFilter} />
-  ) : (
+  return (
     <Form.Check
-      checked={checked}
+      checked={filter ? filter : checked}
       disabled={checked}
       value={"done"}
-      onChange={handleChange}
+      onChange={filter ? handleFilter : handleChange}
     />
   );
 }

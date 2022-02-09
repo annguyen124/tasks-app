@@ -4,11 +4,11 @@
     --background-color: #493a32;
     --footer-color: #3f312a;
 
-    --body-color: #fff;
+    --body-color: #f2fff9;
     --border-color: #5c4a41;
 
     --text-color: #3a4b40;
-    --title-color: #3a4b40;
+    --title-color: #0c7243;
 
     --h1-font-size: 40px;
     --h2-font-size: 24px;
@@ -29,21 +29,14 @@ body {
     color: var(--text-color);
     font-family: "Poppins", sans-serif;
 }
-h1,
-h2,
-h3 {
-    font-weight: 400;
-}
 h1 {
     font-size: var(--h1-font-size);
+    color: var(--title-color);
 }
 h2 {
     color: var(--dark-text-color);
     font-size: var(--h2-font-size);
-}
-h3 {
-    color: var(--title-color);
-    letter-spacing: -0.3px;
+    text-transform: capitalize;
 }
 ul {
     list-style: none;
@@ -70,16 +63,29 @@ p {
 
 /*=============== LAYOUT ===============*/
 .container {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 .title {
-    margin-top: 30px;
+    padding-top: 10px;
+    background: #fff;
+    border-radius: 8px 8px 0px 0px;
 }
 .action {
-    margin-top: 30px;
+    margin: 20px 0;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: -1px 0px 20px 0px #bafcdd;
 }
 .action .btn {
     margin-left: auto;
+}
+.task__container {
+    box-shadow: -2px 21px 43px -4px #bafcdd;
+}
+.task {
+    background: #fff;
+    border-radius: 0px 0px 8px 8px;
 }
 .form-check-input {
     margin-top: 0;
@@ -107,11 +113,13 @@ p {
 }
 .task__item {
     height: 60px;
-    border-bottom: 1px solid lightgray;
+    border-top: 1px solid lightgray;
     align-items: center;
     cursor: default;
 }
-
+.task__title:hover {
+    cursor: grab;
+}
 .col--small {
     width: 4%;
 }

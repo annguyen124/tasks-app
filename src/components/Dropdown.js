@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown } from "react-bootstrap";
 
 export default function CustomDropdown(props) {
-  const { name, options, handleChange } = props;
+  const { name, options, handleChange, showIncompletedTasks } = props;
 
   return (
     <Dropdown>
@@ -12,7 +12,11 @@ export default function CustomDropdown(props) {
 
       <Dropdown.Menu>
         {options.map((option, index) => (
-          <Dropdown.Item key={index} onClick={() => handleChange(option)}>
+          <Dropdown.Item
+            key={index}
+            onClick={() => handleChange(option)}
+            disabled={option === "done" && showIncompletedTasks}
+          >
             {option}
           </Dropdown.Item>
         ))}

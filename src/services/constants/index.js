@@ -1,0 +1,19 @@
+export const GET_TASKS = "GET_TASKS";
+export const GET_TASKS_SUCCEED = "GET_TASKS_SUCCEED";
+export const GET_TASKS_FAILED = "GET_TASKS_FAILED";
+
+export const ADD_TASK = "ADD_TASK";
+export const ADD_TASK_SUCCEED = "ADD_TASK_SUCCEED";
+export const ADD_TASK_FAILED = "ADD_TASK_FAILED";
+
+export const EDIT_TASK = "EDIT_TASK";
+export const EDIT_TASK_SUCCEED = "EDIT_TASK_SUCCEED";
+export const EDIT_TASK_FAILED = "EDIT_TASK_FAILED";
+
+export const DELETE_TASK = "DELETE_TASK";
+export const DELETE_TASK_SUCCEED = "DELETE_TASK_SUCCEED";
+export const DELETE_TASK_FAILED = "DELETE_TASK_FAILED";
+
+export const DND_TASK = "DND_TASK";
+export const DND_TASK_SUCCEED = "DND_TASK_SUCCEED";
+export const DND_TASK_FAILED = "DND_TASK_FAILED";
