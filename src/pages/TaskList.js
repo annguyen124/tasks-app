@@ -7,7 +7,7 @@ import "react-datetime/css/react-datetime.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "assets/styles/style.css";
-import FormDialog from "components/FormDialog";
+import FormDialog from "layouts/FormDialog";
 import _ from "lodash";
 import ConfirmDialog from "components/ConfirmDialog";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +30,7 @@ const INITIAL_TASK = {
 export default function TaskList(params) {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.data);
+
   const [showIncompletedTasks, setShowIncompletedTasks] = useState(false);
   const [status, setStatus] = useState("status");
   const [show, setShow] = useState(false);
@@ -37,21 +38,11 @@ export default function TaskList(params) {
   const [task, setTask] = useState(INITIAL_TASK);
   const [dialog, setDialog] = useState({});
   const [sort, setSort] = useState({ name: "index", type: false });
+
   useEffect(() => {
     const unsub = dispatch(getTasks(status, showIncompletedTasks, sort));
     return () => unsub();
   }, [status, showIncompletedTasks, sort]);
-
-  const handleShow = (curTask = {}) => {
-    const isAdd = _.isEmpty(curTask);
-    setTask(isAdd ? INITIAL_TASK : curTask);
-    setDialog({
-      title: isAdd ? "Add Task" : "Edit Task",
-      action: isAdd ? "Add" : "Edit",
-    });
-    setShow(true);
-  };
-  const handleClose = () => setShow(false);
 
   const filterIncompletedTasks = (toggleShow) => {
     setShowIncompletedTasks(toggleShow);
@@ -62,9 +53,27 @@ export default function TaskList(params) {
     setStatus(newStatus);
   };
 
+  const handleSort = (name) => {
+    if (name !== sort.name) setSort({ name, type: true });
+    else setSort({ name, type: !sort.type });
+  };
+
+  const handleShow = (curTask = {}) => {
+    const isAdd = _.isEmpty(curTask);
+    setTask(isAdd ? INITIAL_TASK : curTask);
+    setDialog({
+      title: isAdd ? "Add Task" : "Edit Task",
+      action: isAdd ? "Add" : "Edit",
+    });
+    setShow(true);
+  };
+
+  const handleClose = () => setShow(false);
+
   const handleChangeForm = (e) => {
     setTask({ ...task, [e.target.name]: e.target.value });
   };
+
   const handleDateTime = (m) => {
     setTask({ ...task, deadline: m.format("hh:mm A, MMM DD, YYYY") });
   };
@@ -77,35 +86,31 @@ export default function TaskList(params) {
     } else {
       const index = _.isEmpty(tasks)
         ? 1
-        : Math.max(...tasks.map((task) => task.index)) + 1;
+        : Math.max(...tasks.map((task) => _.get(task, "index"))) + 1;
       dispatch(addTask({ index, ...task }));
     }
 
     setShow(false);
   };
 
+  const handleChangeStatus = async (checked, id) => {
+    dispatch(editTask(id, { status: checked }));
+  };
+
   const handleShowConfirm = (curTask = {}) => {
     setShowConfirm(true);
     setTask(curTask);
   };
+
   const handleCloseConfirm = () => setShowConfirm(false);
 
   const handleDeleteTask = async () => {
-    dispatch(deleteTask(task.id));
+    dispatch(deleteTask(_.get(task, "id")));
     setShowConfirm(false);
-  };
-
-  const handleChangeStatus = async (checked, task) => {
-    dispatch(editTask(task.id, { status: checked }));
   };
 
   const handleDnD = (orderedTasks) => {
     dispatch(dndTask(orderedTasks));
-  };
-
-  const handleSort = (name) => {
-    if (name !== sort.name) setSort({ name, type: true });
-    else setSort({ name, type: !sort.type });
   };
 
   return (
@@ -118,7 +123,7 @@ export default function TaskList(params) {
         handleShow={handleShow}
         showIncompletedTasks={showIncompletedTasks}
       />
-      <Titles handleSort={handleSort} />
+      <Titles handleSort={handleSort} sortName={_.get(sort, "name")} />
       {_.isEmpty(tasks) ? (
         <div> There is no tasks to display.</div>
       ) : (

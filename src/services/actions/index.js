@@ -5,7 +5,6 @@ import {
   addDoc,
   Timestamp,
   query,
-  where,
   orderBy,
   onSnapshot,
   doc,
@@ -13,6 +12,8 @@ import {
   deleteDoc,
   writeBatch,
 } from "firebase/firestore";
+import _ from "lodash";
+import * as constants from "../../constants";
 
 export const getTasks = (status, showIncompletedTasks, sort) => (dispatch) => {
   dispatch({
@@ -32,14 +33,15 @@ export const getTasks = (status, showIncompletedTasks, sort) => (dispatch) => {
     dispatch({
       type: actionTypes.GET_TASKS_SUCCEED,
       payload: data.filter((task) =>
-        status === "status"
+        status === constants.STATUS
           ? showIncompletedTasks
-            ? task.status !== "done"
+            ? task.status !== constants.DONE
             : task
           : task.status === status
       ),
     });
   });
+
   return unsub;
 };
 
@@ -109,10 +111,10 @@ export const dndTask = (data) => async (dispatch) => {
   });
 
   const batch = writeBatch(db);
-
-  data.forEach((task) => {
+  console.log(data);
+  data.forEach((task, index) => {
     const sfRef = doc(db, "tasks", task.id);
-    batch.update(sfRef, { index: task.index });
+    batch.update(sfRef, { index: data.length - index });
   });
 
   try {

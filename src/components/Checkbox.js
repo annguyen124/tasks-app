@@ -1,9 +1,11 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import _ from "lodash";
+import * as constants from "../constants";
 
 export default function Checkbox({ task, handleChangeStatus, filter }) {
-  const checked = _.get(task, "status") === "done" ? true : false;
+  const checked =
+    _.get(task, constants.STATUS) === constants.DONE ? true : false;
   const handleChange = (e) => {
     handleChangeStatus(e.target.value, task);
   };
@@ -15,7 +17,7 @@ export default function Checkbox({ task, handleChangeStatus, filter }) {
     <Form.Check
       checked={filter ? filter : checked}
       disabled={checked}
-      value={"done"}
+      value={constants.DONE}
       onChange={filter ? handleFilter : handleChange}
     />
   );

@@ -1,9 +1,9 @@
 import React from "react";
-import Dropdown from "components/Dropdown";
+import DropdownButton from "components/DropdownButton";
 import Button from "components/Button";
 import Checkbox from "components/Checkbox";
 import { Stack } from "react-bootstrap";
-import { STATUSES } from "constants";
+
 export default function Actions({
   filterIncompletedTasks,
   fitlerByStatus,
@@ -18,9 +18,8 @@ export default function Actions({
         filter={showIncompletedTasks}
       />
       Show incompleted tasks only
-      <Dropdown
-        name={status}
-        options={["status", ...STATUSES]}
+      <DropdownButton
+        value={status}
         handleChange={fitlerByStatus}
         showIncompletedTasks={showIncompletedTasks}
       />

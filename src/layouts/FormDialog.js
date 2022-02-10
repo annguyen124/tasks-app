@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Modal, Form, Col, Row } from "react-bootstrap";
 import Datetime from "react-datetime";
-import { STATUSES, PRIORITIES } from "constants";
+import * as constants from "../constants";
 import _ from "lodash";
 import moment from "moment";
 
@@ -37,7 +37,7 @@ export default function FormDialog(props) {
                     required
                     name="title"
                     placeholder="Enter title"
-                    defaultValue={task.title}
+                    defaultValue={_.get(task, "title")}
                     onChange={handleChangeForm}
                   />
                 </Form.Group>
@@ -48,9 +48,9 @@ export default function FormDialog(props) {
                   <Form.Select
                     name="priority"
                     onChange={handleChangeForm}
-                    defaultValue={task.priority}
+                    defaultValue={_.get(task, "priority")}
                   >
-                    {PRIORITIES.map((priority, index) => (
+                    {constants.PRIORITIES.map((priority, index) => (
                       <option key={index}>{priority}</option>
                     ))}
                   </Form.Select>
@@ -66,7 +66,7 @@ export default function FormDialog(props) {
                   name="description"
                   rows={3}
                   placeholder="Tell me more about the task"
-                  defaultValue={task.description}
+                  defaultValue={_.get(task, "description")}
                   onChange={handleChangeForm}
                 />
               </Form.Group>
@@ -81,7 +81,7 @@ export default function FormDialog(props) {
                       inputProps={{ placeholder: "Select date & time" }}
                       isValidDate={validDate}
                       dateFormat="MMM DD, YYYY"
-                      initialValue={new Date(task.deadline)}
+                      initialValue={new Date(_.get(task, "deadline"))}
                       onChange={handleDateTime}
                     />
                   </div>
@@ -94,9 +94,9 @@ export default function FormDialog(props) {
                   <Form.Select
                     name="status"
                     onChange={handleChangeForm}
-                    defaultValue={task.status}
+                    defaultValue={_.get(task, "status")}
                   >
-                    {STATUSES.map((status, index) => (
+                    {constants.STATUSES.map((status, index) => (
                       <option key={index}>{status}</option>
                     ))}
                   </Form.Select>

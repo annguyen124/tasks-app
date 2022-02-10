@@ -3,6 +3,7 @@ import { Container, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Checkbox from "components/Checkbox";
 import DropdownButton from "components/DropdownButton";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import _ from "lodash";
 
 export default function Task(props) {
   const {
@@ -29,7 +30,7 @@ export default function Task(props) {
   };
   return (
     <DragDropContext onDragEnd={(result) => handleOnDragEnd(result)}>
-      <Droppable droppableId="characters">
+      <Droppable droppableId="tasks">
         {(provided) => (
           <div
             {...provided.droppableProps}
@@ -37,11 +38,15 @@ export default function Task(props) {
             className="task__container"
           >
             {tasks.map((task, index) => (
-              <Draggable key={task.id} draggableId={task.id} index={index}>
+              <Draggable
+                key={_.get(task, "id")}
+                draggableId={_.get(task, "id")}
+                index={index}
+              >
                 {(provided) => (
                   <Container
                     fluid
-                    key={task.id}
+                    key={_.get(task, "id")}
                     className="task"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -57,19 +62,22 @@ export default function Task(props) {
                         {...provided.dragHandleProps}
                         className="task__title"
                       >
-                        <p>{task.title}</p>
-                        <p className="task-desc">{task.description}</p>
+                        <p>{_.get(task, "title")}</p>
+                        <p className="task-desc">
+                          {_.get(task, "description")}
+                        </p>
                       </Col>
                       <Col md={1} className="col--extra--medium">
                         <DropdownButton
-                          task={task}
-                          handleChangeStatus={handleChangeStatus}
+                          value={_.get(task, "status")}
+                          handleChange={handleChangeStatus}
+                          id={_.get(task, "id")}
                         />
                       </Col>
-                      <Col>{task.deadline} </Col>
+                      <Col>{_.get(task, "deadline")} </Col>
                       <Col md={1} className="col--extra--medium">
-                        <div className={`priority ${task.priority}`}>
-                          {task.priority}
+                        <div className={`priority ${_.get(task, "priority")}`}>
+                          {_.get(task, "priority")}
                         </div>
                       </Col>
                       <Col md={1} className="col--medium col--action">

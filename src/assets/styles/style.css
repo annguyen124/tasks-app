@@ -99,7 +99,7 @@ p {
 
 .task-desc {
     font-size: 12px;
-    color: rgb(155, 155, 155);
+    color: #b4b4b4;
     white-space: nowrap;
     width: 260px;
     overflow: hidden;
@@ -110,10 +110,15 @@ p {
 }
 .bi {
     cursor: pointer;
+    color: #d4d4d4;
 }
+.active {
+    color: #000;
+}
+
 .task__item {
     height: 60px;
-    border-top: 1px solid lightgray;
+    border-top: 1px solid #d4d4d4;
     align-items: center;
     cursor: default;
 }

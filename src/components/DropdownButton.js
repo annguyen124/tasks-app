@@ -1,21 +1,37 @@
 import React from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { STATUSES } from "constants";
-export default function MyDropdownButton({ task, handleChangeStatus }) {
+import * as constants from "../constants";
+
+export default function MyDropdownButton({
+  value,
+  handleChange,
+  id,
+  showIncompletedTasks,
+}) {
   const statusType =
-    task.status === "not started"
+    value === constants.NOT_STARTED
       ? "not-started"
-      : task.status === "in progress"
+      : value === constants.IN_PROGRESS
       ? "in-progress"
-      : task.status;
+      : value;
 
   return (
-    <DropdownButton title={task.status} className={statusType}>
-      {STATUSES.map((status, index) => (
+    <DropdownButton
+      title={value}
+      className={statusType}
+      variant="outline-success"
+    >
+      {!id ? (
+        <Dropdown.Item onClick={() => handleChange(constants.STATUS)}>
+          {constants.STATUS}
+        </Dropdown.Item>
+      ) : null}
+      {constants.STATUSES.map((status, index) => (
         <Dropdown.Item
           key={index}
-          active={status === task.status}
-          onClick={() => handleChangeStatus(status, task)}
+          active={status === value}
+          onClick={() => handleChange(status, id)}
+          disabled={status === constants.DONE && showIncompletedTasks}
         >
           {status}
         </Dropdown.Item>

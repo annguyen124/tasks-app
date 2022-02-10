@@ -1,17 +1,16 @@
 import React from "react";
 import { Stack } from "react-bootstrap";
-import { TASKS } from "constants";
 
 export default function Title(props) {
-  const { name, hasSort, handleSort } = props;
+  const { name, sortName, handleSort } = props;
+  const sortStyle = `bi bi-sort-down ms-auto ${
+    sortName === name ? "active" : ""
+  }`;
   return (
     <Stack direction="horizontal">
       <h2>{name}</h2>
-      {hasSort ? (
-        <i
-          className="bi bi-sort-down ms-auto"
-          onClick={() => handleSort(name)}
-        ></i>
+      {sortName ? (
+        <i className={sortStyle} onClick={() => handleSort(name)}></i>
       ) : null}
     </Stack>
   );
