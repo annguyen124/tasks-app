@@ -75,7 +75,7 @@ export default function FormDialog(props) {
               <Col md={8}>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Deadline</Form.Label>
-                  <div className="calendar">
+                  <div className="form__calendar">
                     <i className="bi bi-calendar calendar__icon"></i>
                     <Datetime
                       inputProps={{ placeholder: "Select date & time" }}

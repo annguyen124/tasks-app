@@ -1,6 +1,7 @@
 import * as actionTypes from "services/constants";
+import _ from "lodash";
 
-const initialState = { data: [], status: null };
+const initialState = { tasks: [], size: 0, status: null };
 
 export default function reducer(state = initialState, action) {
   const { type, payload } = action;
@@ -11,7 +12,9 @@ export default function reducer(state = initialState, action) {
     case actionTypes.GET_TASKS_SUCCEED:
       return {
         ...state,
-        data: payload,
+
+        tasks: _.get(payload, "tasks"),
+        size: _.get(payload, "size"),
       };
 
     case actionTypes.GET_TASKS_FAILED:
@@ -23,11 +26,11 @@ export default function reducer(state = initialState, action) {
     case actionTypes.ADD_TASK_SUCCEED:
       return {
         ...state,
-        status: payload.status,
+        status: payload,
       };
 
     case actionTypes.ADD_TASK_FAILED:
-      return { ...state, status: payload.status };
+      return { ...state, status: payload };
 
     case actionTypes.EDIT_TASK:
       return { ...state };
@@ -35,23 +38,23 @@ export default function reducer(state = initialState, action) {
     case actionTypes.EDIT_TASK_SUCCEED:
       return {
         ...state,
-        status: payload.status,
+        status: payload,
       };
 
     case actionTypes.EDIT_TASK_FAILED:
-      return { ...state, status: payload.status };
+      return { ...state, status: payload };
 
     case actionTypes.DELETE_TASK:
       return { ...state };
 
     case actionTypes.DELETE_TASK_SUCCEED:
-      return { ...state, status: payload.status };
+      return { ...state, status: payload };
 
     case actionTypes.DELETE_TASK_FAILED:
-      return { ...state, status: payload.status };
+      return { ...state, status: payload };
 
     case actionTypes.DND_TASK:
-      return { ...state, data: payload };
+      return { ...state, tasks: payload };
     default:
       return state;
   }

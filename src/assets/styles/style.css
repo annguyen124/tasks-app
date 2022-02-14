@@ -1,17 +1,12 @@
 /*=============== VARIABLES CSS ===============*/
 :root {
-    --header-color: #2e241d;
-    --background-color: #493a32;
-    --footer-color: #3f312a;
-
     --body-color: #f2fff9;
-    --border-color: #5c4a41;
 
-    --text-color: #3a4b40;
+    --text-color: #4a5f51;
     --title-color: #0c7243;
 
     --h1-font-size: 40px;
-    --h2-font-size: 24px;
+    --h2-font-size: 16px;
     --title-font-size: 13px;
     --desc-font-size: 11px;
 }
@@ -34,9 +29,9 @@ h1 {
     color: var(--title-color);
 }
 h2 {
-    color: var(--dark-text-color);
     font-size: var(--h2-font-size);
     text-transform: capitalize;
+    font-weight: 600;
 }
 ul {
     list-style: none;
@@ -61,32 +56,104 @@ p {
     margin: 0;
 }
 
+.status,
+.dropdown-item,
+.btn,
+.form-select {
+    text-transform: capitalize;
+}
+.btn:focus {
+    outline: none;
+}
+.bi {
+    cursor: pointer;
+}
+.bi-caret-up,
+.bi-caret-up-fill,
+.bi-caret-down,
+.bi-caret-down-fill {
+    height: 9px;
+    font-size: 13px;
+}
+.active {
+    color: #000;
+}
+.inactive {
+    color: #c2c2c2;
+}
 /*=============== LAYOUT ===============*/
 .container {
     margin-top: 20px;
-}
-.title {
-    padding-top: 10px;
-    background: #fff;
-    border-radius: 8px 8px 0px 0px;
 }
 .action {
     margin: 20px 0;
     padding: 20px;
     background: #fff;
-    border-radius: 8px;
     box-shadow: -1px 0px 20px 0px #bafcdd;
 }
+.title {
+    padding-top: 15px;
+    padding-bottom: 5px;
+    background: #fff;
+    border-bottom: 2px solid #e6e6e6;
+}
+.task__table {
+    background: #fff;
+    box-shadow: -1px 0px 20px 0px #bafcdd;
+}
+.footer {
+    border-top: 1px solid #e6e6e6;
+    padding: 12px;
+}
+
+.empty {
+    border-radius: 8px;
+    text-align: center;
+    background: #fff;
+    padding: 20px 0 60px;
+}
+.empty p {
+    padding: 10px 0 20px;
+}
+/*=============== COMPONENTS STYLE ===============*/
 .action .btn {
     margin-left: auto;
 }
-.task__container {
-    box-shadow: -2px 21px 43px -4px #bafcdd;
+.tasks {
+    height: 300px;
+    overflow-y: auto;
 }
 .task {
-    background: #fff;
-    border-radius: 0px 0px 8px 8px;
+    height: 60px;
+    border-bottom: 1px solid #e6e6e6;
+    align-items: center;
+    cursor: default;
 }
+.task--dragging {
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+}
+.task__title:hover {
+    cursor: grab;
+}
+.task__desc {
+    font-size: 12px;
+    color: #b4b4b4;
+    white-space: nowrap;
+    width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tasks .dropdown-toggle::after {
+    display: none;
+}
+.sort {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: -10px;
+}
+
 .form-check-input {
     margin-top: 0;
     width: 24px;
@@ -96,49 +163,6 @@ p {
 .form-check-input[type="checkbox"] {
     border-radius: 50%;
 }
-
-.task-desc {
-    font-size: 12px;
-    color: #b4b4b4;
-    white-space: nowrap;
-    width: 260px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.task .dropdown-toggle::after {
-    display: none;
-}
-.bi {
-    cursor: pointer;
-    color: #d4d4d4;
-}
-.active {
-    color: #000;
-}
-
-.task__item {
-    height: 60px;
-    border-top: 1px solid #d4d4d4;
-    align-items: center;
-    cursor: default;
-}
-.task__title:hover {
-    cursor: grab;
-}
-.col--small {
-    width: 4%;
-}
-.col--medium {
-    width: 10%;
-}
-.col--extra--medium {
-    width: 15%;
-}
-.col--action {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-}
 .form .btn {
     width: 100%;
 }
@@ -146,13 +170,8 @@ p {
     border-top: 1px solid lightgray;
     padding-top: 18px;
 }
-.status,
-.dropdown-item,
-.btn,
-.form-select {
-    text-transform: capitalize;
-}
-.calendar {
+
+.form__calendar {
     position: relative;
     cursor: pointer;
 }
@@ -160,6 +179,25 @@ p {
     position: absolute;
     right: 5;
     top: 5;
+}
+
+.col--small {
+    width: 4%;
+}
+.col--medium {
+    width: 10%;
+}
+.col--scroll {
+    width: calc(10% + 10px);
+}
+.col--extra--medium {
+    width: 15%;
+}
+.col--action {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
 }
 
 /*=============== STATUS STYLE ===============*/
@@ -205,4 +243,20 @@ p {
 }
 .low {
     color: #089237;
+}
+
+/*=============== SCROLL BAR ===============*/
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #b4b4b4;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background: #198754;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #115535;
 }

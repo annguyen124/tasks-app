@@ -16,8 +16,11 @@ export default function Actions({
       <Checkbox
         handleChangeStatus={filterIncompletedTasks}
         filter={showIncompletedTasks}
+        status={status}
       />
-      Show incompleted tasks only
+      <p className={status === "done" ? "inactive" : ""}>
+        Show incompleted tasks only
+      </p>
       <DropdownButton
         value={status}
         handleChange={fitlerByStatus}
@@ -25,7 +28,6 @@ export default function Actions({
       />
       <Button
         handleClick={handleShow}
-        className="btn-add"
         name="New Task"
       ></Button>
     </Stack>

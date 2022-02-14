@@ -32,13 +32,16 @@ export const getTasks = (status, showIncompletedTasks, sort) => (dispatch) => {
 
     dispatch({
       type: actionTypes.GET_TASKS_SUCCEED,
-      payload: data.filter((task) =>
-        status === constants.STATUS
-          ? showIncompletedTasks
-            ? task.status !== constants.DONE
-            : task
-          : task.status === status
-      ),
+      payload: {
+        tasks: data.filter((task) =>
+          status === constants.STATUS
+            ? showIncompletedTasks
+              ? task.status !== constants.DONE
+              : task
+            : task.status === status
+        ),
+        size: data.length,
+      },
     });
   });
 
@@ -111,21 +114,10 @@ export const dndTask = (data) => async (dispatch) => {
   });
 
   const batch = writeBatch(db);
-  console.log(data);
   data.forEach((task, index) => {
     const sfRef = doc(db, "tasks", task.id);
     batch.update(sfRef, { index: data.length - index });
   });
 
-  try {
-    await batch.commit();
-    dispatch({
-      type: actionTypes.DND_TASK_SUCCEED,
-    });
-  } catch (err) {
-    dispatch({
-      type: actionTypes.DND_TASK_FAILED,
-      payload: err,
-    });
-  }
+  await batch.commit();
 };

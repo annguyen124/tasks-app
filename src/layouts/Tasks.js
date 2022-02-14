@@ -35,7 +35,7 @@ export default function Task(props) {
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            className="task__container"
+            className="tasks"
           >
             {tasks.map((task, index) => (
               <Draggable
@@ -43,15 +43,15 @@ export default function Task(props) {
                 draggableId={_.get(task, "id")}
                 index={index}
               >
-                {(provided) => (
+                {(provided, snapshot) => (
                   <Container
                     fluid
                     key={_.get(task, "id")}
-                    className="task"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
+                    className={snapshot.draggingOver ? "task--dragging" : ""}
                   >
-                    <Row className="task__item">
+                    <Row className="task">
                       <Col md={1} className="col--small">
                         <Checkbox
                           task={task}
@@ -63,7 +63,7 @@ export default function Task(props) {
                         className="task__title"
                       >
                         <p>{_.get(task, "title")}</p>
-                        <p className="task-desc">
+                        <p className="task__desc">
                           {_.get(task, "description")}
                         </p>
                       </Col>
@@ -80,7 +80,7 @@ export default function Task(props) {
                           {_.get(task, "priority")}
                         </div>
                       </Col>
-                      <Col md={1} className="col--medium col--action">
+                      <Col md={1} className="col--action">
                         <OverlayTrigger
                           placement="bottom"
                           delay={{ show: 100, hide: 0 }}

@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+
 import Actions from "layouts/Actions";
 import Tasks from "layouts/Tasks";
 import Titles from "layouts/Titles";
+import FormDialog from "layouts/FormDialog";
+import ConfirmDialog from "layouts/ConfirmDialog";
+import EmptyList from "layouts/EmptyList";
+
 import { Container } from "react-bootstrap";
 import "react-datetime/css/react-datetime.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "assets/styles/style.css";
-import FormDialog from "layouts/FormDialog";
-import _ from "lodash";
-import ConfirmDialog from "components/ConfirmDialog";
-import { useDispatch, useSelector } from "react-redux";
+
 import {
   getTasks,
   addTask,
@@ -27,9 +31,14 @@ const INITIAL_TASK = {
   priority: "medium",
 };
 
+const DEFAULT_SORT = {
+  name: "index",
+  type: false,
+};
+
 export default function TaskList(params) {
   const dispatch = useDispatch();
-  const tasks = useSelector((state) => state.tasks.data);
+  const { tasks, size } = useSelector((state) => state.tasks);
 
   const [showIncompletedTasks, setShowIncompletedTasks] = useState(false);
   const [status, setStatus] = useState("status");
@@ -37,7 +46,7 @@ export default function TaskList(params) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [task, setTask] = useState(INITIAL_TASK);
   const [dialog, setDialog] = useState({});
-  const [sort, setSort] = useState({ name: "index", type: false });
+  const [sort, setSort] = useState(DEFAULT_SORT);
 
   useEffect(() => {
     const unsub = dispatch(getTasks(status, showIncompletedTasks, sort));
@@ -55,7 +64,9 @@ export default function TaskList(params) {
 
   const handleSort = (name) => {
     if (name !== sort.name) setSort({ name, type: true });
-    else setSort({ name, type: !sort.type });
+    else {
+      setSort({ name: sort.type ? name : DEFAULT_SORT.name, type: false });
+    }
   };
 
   const handleShow = (curTask = {}) => {
@@ -110,6 +121,7 @@ export default function TaskList(params) {
   };
 
   const handleDnD = (orderedTasks) => {
+    setSort(DEFAULT_SORT);
     dispatch(dndTask(orderedTasks));
   };
 
@@ -123,18 +135,29 @@ export default function TaskList(params) {
         handleShow={handleShow}
         showIncompletedTasks={showIncompletedTasks}
       />
-      <Titles handleSort={handleSort} sortName={_.get(sort, "name")} />
-      {_.isEmpty(tasks) ? (
-        <div> There is no tasks to display.</div>
-      ) : (
-        <Tasks
-          tasks={tasks}
-          handleShow={handleShow}
-          handleShowConfirm={handleShowConfirm}
-          handleChangeStatus={handleChangeStatus}
-          handleDnD={handleDnD}
-        />
-      )}
+
+      <div className="task__table">
+        {_.isEmpty(tasks) ? (
+          <EmptyList
+            handleShow={handleShow}
+            initial={status === "status" && !showIncompletedTasks}
+          />
+        ) : (
+          <>
+            <Titles handleSort={handleSort} sort={sort} tasks={tasks} />
+            <Tasks
+              tasks={tasks}
+              handleShow={handleShow}
+              handleShowConfirm={handleShowConfirm}
+              handleChangeStatus={handleChangeStatus}
+              handleDnD={handleDnD}
+            />
+            <div className="footer">
+              Show {tasks.length} out of {size}
+            </div>
+          </>
+        )}
+      </div>
       <FormDialog
         show={show}
         handleClose={handleClose}
