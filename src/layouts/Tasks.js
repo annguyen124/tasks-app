@@ -4,6 +4,7 @@ import Checkbox from "components/Checkbox";
 import DropdownButton from "components/DropdownButton";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
+import { PRIORITIES } from "constants";
 
 export default function Task(props) {
   const {
@@ -51,7 +52,7 @@ export default function Task(props) {
                     {...provided.draggableProps}
                     className={snapshot.draggingOver ? "task--dragging" : ""}
                   >
-                    <Row className="task">
+                    <Row className="task"  {...provided.dragHandleProps}>
                       <Col md={1} className="col--small">
                         <Checkbox
                           task={task}
@@ -59,25 +60,31 @@ export default function Task(props) {
                         />
                       </Col>
                       <Col
-                        {...provided.dragHandleProps}
+                       
                         className="task__title"
+                        md={3} lg={4} xs={11}
                       >
                         <p>{_.get(task, "title")}</p>
                         <p className="task__desc">
                           {_.get(task, "description")}
                         </p>
                       </Col>
-                      <Col md={1} className="col--extra--medium">
+                      <Col md={1} xs={4} className="col--extra--medium">
                         <DropdownButton
                           value={_.get(task, "status")}
                           handleChange={handleChangeStatus}
-                          id={_.get(task, "id")}
+                          task={task}
                         />
                       </Col>
-                      <Col>{_.get(task, "deadline")} </Col>
-                      <Col md={1} className="col--extra--medium">
-                        <div className={`priority ${_.get(task, "priority")}`}>
-                          {_.get(task, "priority")}
+                      <Col className="deadline"> {_.get(task, "deadline")} </Col>
+                      <Col md={1} className="col--extra--medium col--priority">
+                        <div
+                          className={`priority ${
+                            PRIORITIES[_.get(task, "priority")]
+                          }`}
+                        >
+                          <i className="bi bi-circle-fill"></i>{" "}
+                          {PRIORITIES[_.get(task, "priority")]}
                         </div>
                       </Col>
                       <Col md={1} className="col--action">

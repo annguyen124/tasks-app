@@ -3,16 +3,16 @@ import Title from "components/Title";
 import { Container, Row, Col } from "react-bootstrap";
 import _ from "lodash";
 
-export default function Titles({ handleSort, sort, tasks }) {
+export default function Titles({ handleSort, sort, tasks, filter }) {
   return (
     <Container fluid className="title">
       <Row>
         <Col md={1} className="col--small"></Col>
-        <Col>
+        <Col md={3} lg={4}>
           <Title name="title" sort={sort} handleSort={handleSort} />
         </Col>
         <Col md={1} className="col--extra--medium">
-          <Title name="status" handleSort={handleSort} />
+          <Title name="status" filter={filter} handleSort={handleSort} />
         </Col>
         <Col>
           <Title name="deadline" sort={sort} handleSort={handleSort} />

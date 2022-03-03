@@ -3,6 +3,7 @@ import DropdownButton from "components/DropdownButton";
 import Button from "components/Button";
 import Checkbox from "components/Checkbox";
 import { Stack } from "react-bootstrap";
+import { SORT } from "constants";
 
 export default function Actions({
   filterIncompletedTasks,
@@ -10,9 +11,11 @@ export default function Actions({
   status,
   handleShow,
   showIncompletedTasks,
+  handleSort,
+  sort,
 }) {
   return (
-    <Stack direction="horizontal" gap={2} className="action">
+    <div className="action">
       <Checkbox
         handleChangeStatus={filterIncompletedTasks}
         filter={showIncompletedTasks}
@@ -26,10 +29,8 @@ export default function Actions({
         handleChange={fitlerByStatus}
         showIncompletedTasks={showIncompletedTasks}
       />
-      <Button
-        handleClick={handleShow}
-        name="New Task"
-      ></Button>
-    </Stack>
+      <DropdownButton value={sort.name} sort={SORT} handleChange={handleSort} />
+      <Button handleClick={handleShow} name="New Task"></Button>
+    </div>
   );
 }

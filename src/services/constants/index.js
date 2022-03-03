@@ -17,3 +17,5 @@ export const DELETE_TASK_FAILED = "DELETE_TASK_FAILED";
 export const DND_TASK = "DND_TASK";
 export const DND_TASK_SUCCEED = "DND_TASK_SUCCEED";
 export const DND_TASK_FAILED = "DND_TASK_FAILED";
+
+export const EXPIRE_TASK = "EXPIRE_TASK";

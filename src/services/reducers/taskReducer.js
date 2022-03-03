@@ -55,6 +55,9 @@ export default function reducer(state = initialState, action) {
 
     case actionTypes.DND_TASK:
       return { ...state, tasks: payload };
+      
+    case actionTypes.EXPIRE_TASK:
+      return { ...state, tasks: payload };
     default:
       return state;
   }

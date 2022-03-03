@@ -65,15 +65,15 @@ p {
 .btn:focus {
     outline: none;
 }
-.bi {
+.bi:hover {
     cursor: pointer;
 }
 .bi-caret-up,
 .bi-caret-up-fill,
 .bi-caret-down,
 .bi-caret-down-fill {
-    height: 9px;
-    font-size: 13px;
+    height: 10px;
+    font-size: 14px;
 }
 .active {
     color: #000;
@@ -86,10 +86,17 @@ p {
     margin-top: 20px;
 }
 .action {
+    display: flex;
+    align-items: center;
+    flex-flow: wrap row;
+    gap: 10px;
     margin: 20px 0;
     padding: 20px;
     background: #fff;
     box-shadow: -1px 0px 20px 0px #bafcdd;
+}
+.dropdown--sort {
+    display: none;
 }
 .title {
     padding-top: 15px;
@@ -120,7 +127,7 @@ p {
     margin-left: auto;
 }
 .tasks {
-    height: 300px;
+    height: 50vh;
     overflow-y: auto;
 }
 .task {
@@ -131,16 +138,18 @@ p {
 }
 .task--dragging {
     border: 1px solid #e2e2e2;
+    border-bottom: none;
     background-color: #fff;
 }
 .task__title:hover {
     cursor: grab;
 }
+
 .task__desc {
     font-size: 12px;
     color: #b4b4b4;
+    width: 90%;
     white-space: nowrap;
-    width: 260px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -151,9 +160,14 @@ p {
     display: flex;
     flex-direction: column;
     position: relative;
-    top: -10px;
+    top: -9px;
 }
-
+.filter {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: -5px;
+}
 .form-check-input {
     margin-top: 0;
     width: 24px;
@@ -175,12 +189,18 @@ p {
     position: relative;
     cursor: pointer;
 }
-.calendar__icon {
+.bi-calendar {
     position: absolute;
-    right: 5;
-    top: 5;
+    z-index: 1;
+    right: 16px;
+    top: 8px;
 }
-
+.bi-calendar:hover {
+    cursor: default;
+}
+.form-control:disabled {
+    background-color: #fff;
+}
 .col--small {
     width: 4%;
 }
@@ -199,7 +219,9 @@ p {
     justify-content: center;
     gap: 12px;
 }
-
+.bi-circle-fill {
+    margin-right: 4px;
+}
 /*=============== STATUS STYLE ===============*/
 .not-started .btn {
     color: #232323;
@@ -259,4 +281,70 @@ p {
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #115535;
+}
+/*=============== BREAKPOINTS ===============*/
+@media only screen and (max-width: 992px) {
+    .col--extra--medium {
+        width: 20%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .title,
+    .footer {
+        display: none;
+    }
+    .tasks {
+        overflow-y: visible;
+        height: auto;
+    }
+    .task__table {
+        background: none;
+    }
+    .task {
+        height: auto;
+        border: none;
+        margin-bottom: 10px;
+        background-color: #fff;
+        padding: 10px;
+    }
+    .task--dragging {
+        border: none;
+        box-shadow: 2px 0px #045821;
+    }
+    .task__title {
+        padding: 0 0 0 18px;
+    }
+    .col--extra--medium {
+        width: 28%;
+        margin: 15px 0;
+    }
+    .col--action {
+        margin-left: auto;
+    }
+    .col--priority {
+        width: 25%;
+    }
+    .dropdown--sort {
+        display: block;
+    }
+    .action p {
+        width: 85%;
+    }
+}
+
+@media only screen and (max-width: 568px) {
+    .col--extra--medium {
+        width: 50%;
+    }
+    .col--action {
+        margin-left: auto;
+        margin-right: 14px;
+    }
+    .deadline {
+        text-align: right;
+    }
+    .btn--name {
+        display: none;
+    }
 }

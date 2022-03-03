@@ -1,4 +1,5 @@
 import * as actionTypes from "services/constants";
+
 import { db } from "../../firebase";
 import {
   collection,
@@ -14,12 +15,32 @@ import {
 } from "firebase/firestore";
 import _ from "lodash";
 import * as constants from "../../constants";
+import moment from "moment";
+
+const sortDeadline = (data, isAsc) => {
+  return data.sort((a, b) => {
+    return isAsc
+      ? new Date(a.deadline) - new Date(b.deadline)
+      : new Date(b.deadline) - new Date(a.deadline);
+  });
+};
+const checkExpiredTasks = (data) => {
+  return data.map((task) => {
+    return {
+      ...task,
+      status:
+        moment() > moment(task.deadline, "MMMM DD, YYYY, hh:mm A") &&
+        task.status !== "done"
+          ? "delay"
+          : task.status,
+    };
+  });
+};
 
 export const getTasks = (status, showIncompletedTasks, sort) => (dispatch) => {
   dispatch({
     type: actionTypes.GET_TASKS,
   });
-
   const q = query(
     collection(db, "tasks"),
     orderBy(sort.name, sort.type ? "asc" : "desc")
@@ -30,10 +51,14 @@ export const getTasks = (status, showIncompletedTasks, sort) => (dispatch) => {
       ...doc.data(),
     }));
 
+    const sortTasks =
+      sort.name === "deadline" ? sortDeadline(data, sort.type) : data;
+    const tasks = checkExpiredTasks(sortTasks);
+
     dispatch({
       type: actionTypes.GET_TASKS_SUCCEED,
       payload: {
-        tasks: data.filter((task) =>
+        tasks: tasks.filter((task) =>
           status === constants.STATUS
             ? showIncompletedTasks
               ? task.status !== constants.DONE

@@ -1,12 +1,13 @@
 import React from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import * as constants from "../constants";
-
+import _ from "lodash";
 export default function MyDropdownButton({
   value,
   handleChange,
-  id,
+  task,
   showIncompletedTasks,
+  sort = false,
 }) {
   const statusType =
     value === constants.NOT_STARTED
@@ -15,25 +16,30 @@ export default function MyDropdownButton({
       ? "in-progress"
       : value;
 
+  const options = sort ? constants.SORT : constants.STATUSES;
+  
   return (
     <DropdownButton
-      title={value}
-      className={statusType}
+      title={value === "index" ? constants.UNSORT : value}
+      className={sort ? "dropdown--sort" : statusType}
       variant="outline-success"
     >
-      {!id ? (
-        <Dropdown.Item onClick={() => handleChange(constants.STATUS)}>
-          {constants.STATUS}
+      {!_.get(task, "id") ? (
+        <Dropdown.Item
+          onClick={() => handleChange(sort ? "index" : constants.STATUS)}
+        >
+          {sort ? constants.UNSORT : constants.STATUS}
         </Dropdown.Item>
       ) : null}
-      {constants.STATUSES.map((status, index) => (
+
+      {options?.map((item, index) => (
         <Dropdown.Item
           key={index}
-          active={status === value}
-          onClick={() => handleChange(status, id)}
-          disabled={status === constants.DONE && showIncompletedTasks}
+          active={item === value}
+          onClick={() => handleChange(item, task)}
+          disabled={item === constants.DONE && showIncompletedTasks}
         >
-          {status}
+          {item}
         </Dropdown.Item>
       ))}
     </DropdownButton>

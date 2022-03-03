@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
+import moment from "moment";
 
 import Actions from "layouts/Actions";
 import Tasks from "layouts/Tasks";
@@ -8,6 +9,7 @@ import Titles from "layouts/Titles";
 import FormDialog from "layouts/FormDialog";
 import ConfirmDialog from "layouts/ConfirmDialog";
 import EmptyList from "layouts/EmptyList";
+import Notification from "components/Notification";
 
 import { Container } from "react-bootstrap";
 import "react-datetime/css/react-datetime.css";
@@ -28,7 +30,7 @@ const INITIAL_TASK = {
   description: "",
   deadline: "",
   status: "not started",
-  priority: "medium",
+  priority: "1",
 };
 
 const DEFAULT_SORT = {
@@ -36,17 +38,23 @@ const DEFAULT_SORT = {
   type: false,
 };
 
-export default function TaskList(params) {
+export default function TaskList() {
   const dispatch = useDispatch();
   const { tasks, size } = useSelector((state) => state.tasks);
 
-  const [showIncompletedTasks, setShowIncompletedTasks] = useState(false);
-  const [status, setStatus] = useState("status");
+  const [showIncompletedTasks, setShowIncompletedTasks] = useState(true);
+  const [status, setStatus] = useState("all");
   const [show, setShow] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [task, setTask] = useState(INITIAL_TASK);
   const [dialog, setDialog] = useState({});
   const [sort, setSort] = useState(DEFAULT_SORT);
+  const [notification, setNotification] = useState({
+    show: false,
+    title: "",
+    content: "",
+    variant: "",
+  });
 
   useEffect(() => {
     const unsub = dispatch(getTasks(status, showIncompletedTasks, sort));
@@ -86,26 +94,46 @@ export default function TaskList(params) {
   };
 
   const handleDateTime = (m) => {
-    setTask({ ...task, deadline: m.format("hh:mm A, MMM DD, YYYY") });
+    setTask({ ...task, deadline: m.format("MMMM DD, YYYY, hh:mm A") });
   };
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     const id = _.get(task, "id");
-    if (id) {
-      dispatch(editTask(id, task));
+    const isRequired = _.get(task, "title") && _.get(task, "deadline");
+    if (isRequired) {
+      if (id) {
+        dispatch(editTask(id, task));
+      } else {
+        const index = _.isEmpty(tasks)
+          ? 1
+          : Math.max(...tasks.map((task) => _.get(task, "index"))) + 1;
+        dispatch(
+          addTask({ index, prev_status: _.get(task, "status"), ...task })
+        );
+      }
+      setShow(false);
     } else {
-      const index = _.isEmpty(tasks)
-        ? 1
-        : Math.max(...tasks.map((task) => _.get(task, "index"))) + 1;
-      dispatch(addTask({ index, ...task }));
+      console.log("PLEASE FILL IN FORM");
+      setNotification({
+        show: true,
+        variant: "warning",
+        title: "Warning",
+        content: "Title and Deadline are required!",
+      });
     }
-
-    setShow(false);
   };
 
-  const handleChangeStatus = async (checked, id) => {
-    dispatch(editTask(id, { status: checked }));
+  const handleChangeStatus = async (newStatus, task) => {
+    const isExpired =
+      moment() > moment(task.deadline, "MMMM DD, YYYY, hh:mm A");
+    const notDone = newStatus !== "done";
+    dispatch(
+      editTask(_.get(task, "id"), {
+        status: isExpired && notDone ? "delay" : newStatus,
+        prev_status: _.get(task, "status"),
+      })
+    );
   };
 
   const handleShowConfirm = (curTask = {}) => {
@@ -134,13 +162,15 @@ export default function TaskList(params) {
         status={status}
         handleShow={handleShow}
         showIncompletedTasks={showIncompletedTasks}
+        handleSort={handleSort}
+        sort={sort}
       />
 
       <div className="task__table">
         {_.isEmpty(tasks) ? (
           <EmptyList
             handleShow={handleShow}
-            initial={status === "status" && !showIncompletedTasks}
+            initial={status === "all" && !showIncompletedTasks}
           />
         ) : (
           <>
@@ -173,6 +203,10 @@ export default function TaskList(params) {
         handleDeleteTask={handleDeleteTask}
         task={task}
       ></ConfirmDialog>
+      <Notification
+        notification={notification}
+        setNotification={setNotification}
+      />
     </Container>
   );
 }

@@ -6,7 +6,7 @@ export default function CustomButton(props) {
   return (
     <Button variant="success" onClick={() => handleClick()}>
       <i className="bi bi-plus"></i>
-      {name}
+      <span className="btn--name">{name}</span>
     </Button>
   );
 }

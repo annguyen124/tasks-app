@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal, Form, Col, Row } from "react-bootstrap";
 import Datetime from "react-datetime";
 import * as constants from "../constants";
@@ -15,7 +15,7 @@ export default function FormDialog(props) {
     handleSubmitForm,
     handleDateTime,
   } = props;
-
+  const [disabled, setDisabled] = useState(false);
   const yesterday = moment().subtract(1, "day");
   function validDate(current) {
     return current.isAfter(yesterday);
@@ -34,7 +34,6 @@ export default function FormDialog(props) {
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Title</Form.Label>
                   <Form.Control
-                    required
                     name="title"
                     placeholder="Enter title"
                     defaultValue={_.get(task, "title")}
@@ -51,7 +50,9 @@ export default function FormDialog(props) {
                     defaultValue={_.get(task, "priority")}
                   >
                     {constants.PRIORITIES.map((priority, index) => (
-                      <option key={index}>{priority}</option>
+                      <option key={index} value={index}>
+                        {priority}
+                      </option>
                     ))}
                   </Form.Select>
                 </Form.Group>
@@ -76,10 +77,15 @@ export default function FormDialog(props) {
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Deadline</Form.Label>
                   <div className="form__calendar">
-                    <i className="bi bi-calendar calendar__icon"></i>
+                    <i className="bi bi-calendar"></i>
                     <Datetime
-                      inputProps={{ placeholder: "Select date & time" }}
+                      inputProps={{
+                        placeholder: "Select date & time",
+                        disabled: disabled,
+                      }}
                       isValidDate={validDate}
+                      onOpen={() => setDisabled(true)}
+                      onClose={() => setDisabled(false)}
                       dateFormat="MMM DD, YYYY"
                       initialValue={new Date(_.get(task, "deadline"))}
                       onChange={handleDateTime}
